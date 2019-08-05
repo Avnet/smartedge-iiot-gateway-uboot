@@ -1,0 +1,1 @@
+../../../scripts/dtc/dtc -I dts -Wno-unit_address_vs_reg $1.dts >$1.dtbo

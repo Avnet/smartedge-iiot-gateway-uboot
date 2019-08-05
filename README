@@ -1,0 +1,24 @@
+# SPDX-License-Identifier: GPL-2.0+
+#
+# (C) Copyright 2000 - 2013
+# Wolfgang Denk, DENX Software Engineering, wd@denx.de.
+
+Summary:
+========
+
+This is the source code for u-boot.
+
+We use the cross compiler cross-gcc-8.3.0-pi_2-3 tool chain. Any other suitable cross compiler for the ARM may be used.
+
+To compile u-boot use the following.
+
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
+
+The image is u-boot.bin and should be copied to /boot/kernel7.img
+
+Note:
+
+We do not process cmdline.txt so if you need to change it then edit .config file entry BOOTCOMMAND=
+
+If you have enabled secure boot feature with the raspberry pi then you must send the resulting image to Avnet so it can be properly signed.
+

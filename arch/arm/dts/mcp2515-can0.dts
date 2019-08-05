@@ -1,0 +1,96 @@
+/dts-v1/;
+// magic:		0xd00dfeed
+// totalsize:		0x729 (1833)
+// off_dt_struct:	0x38
+// off_dt_strings:	0x60c
+// off_mem_rsvmap:	0x28
+// version:		17
+// last_comp_version:	16
+// boot_cpuid_phys:	0x0
+// size_dt_strings:	0x11d
+// size_dt_struct:	0x5d4
+
+/ {
+    compatible = "brcm,bcm2835", "brcm,bcm2836", "brcm,bcm2708", "brcm,bcm2709";
+    fragment@0 {
+        target = <0xffffffff>;
+        __overlay__ {
+            status = "okay";
+        };
+    };
+    fragment@1 {
+        target = <0xffffffff>;
+        __overlay__ {
+            status = "disabled";
+        };
+    };
+    fragment@2 {
+        target = <0xffffffff>;
+        __overlay__ {
+            can0_pins {
+                brcm,pins = <0x00000019>;
+                brcm,function = <0x00000000>;
+                phandle = <0x00000001>;
+            };
+        };
+    };
+    fragment@3 {
+        target-path = "/clocks";
+        __overlay__ {
+            can0_osc {
+                compatible = "fixed-clock";
+                #clock-cells = <0x00000000>;
+                clock-frequency = <0x00f42400>;
+                phandle = <0x00000002>;
+            };
+        };
+    };
+    fragment@4 {
+        target = <0xffffffff>;
+        __overlay__ {
+            #address-cells = <0x00000001>;
+            #size-cells = <0x00000000>;
+            mcp2515@0 {
+                reg = <0x00000000>;
+                compatible = "microchip,mcp2515";
+                pinctrl-names = "default";
+                pinctrl-0 = <0x00000001>;
+                spi-max-frequency = <0x00989680>;
+                interrupt-parent = <0xffffffff>;
+                interrupts = <0x00000019 0x00000008>;
+                clocks = <0x00000002>;
+                phandle = <0x00000003>;
+            };
+        };
+    };
+    __overrides__ {
+        oscillator = [00 00 00 02 63 6c 6f 63 6b 2d 66 72 65 71 75 65 6e 63 79 3a 30 00];
+        spimaxfrequency = <0x00000003 0x7370692d 0x6d61782d 0x66726571 0x75656e63 0x793a3000>;
+        interrupt = [00 00 00 01 62 72 63 6d 2c 70 69 6e 73 3a 30 00 00 00 00 03 69 6e 74 65 72 72 75 70 74 73 3a 30 00];
+    };
+    __symbols__ {
+        can0_pins = "/fragment@2/__overlay__/can0_pins";
+        can0_osc = "/fragment@3/__overlay__/can0_osc";
+        can0 = "/fragment@4/__overlay__/mcp2515@0";
+    };
+    __fixups__ {
+        spi0 = "/fragment@0:target:0", "/fragment@4:target:0";
+        spidev0 = "/fragment@1:target:0";
+        gpio = "/fragment@2:target:0", "/fragment@4/__overlay__/mcp2515@0:interrupt-parent:0";
+    };
+    __local_fixups__ {
+        fragment@4 {
+            __overlay__ {
+                mcp2515@0 {
+                    pinctrl-0 = <0x00000000>;
+                    clocks = <0x00000000>;
+                };
+            };
+        };
+        __overrides__ {
+            oscillator = <0x00000000>;
+            spimaxfrequency = <0x00000000>;
+            interrupt = <0x00000000 0x00000010>;
+        };
+    };
+};

@@ -1,0 +1,89 @@
+/dts-v1/;
+
+/ {
+	compatible = "brcm,bcm2835", "brcm,bcm2708", "brcm,bcm2709";
+
+	fragment@0 {
+		target = <0xffffffff>;
+
+		__overlay__ {
+
+			spi1_pins {
+				brcm,pins = <0x13 0x14 0x15>;
+				brcm,function = <0x3>;
+				phandle = <0x1>;
+			};
+
+			spi1_cs_pins {
+				brcm,pins = <0x12>;
+				brcm,function = <0x1>;
+				phandle = <0x2>;
+			};
+		};
+	};
+
+	fragment@1 {
+		target = <0xffffffff>;
+
+		__overlay__ {
+			#address-cells = <0x1>;
+			#size-cells = <0x0>;
+			pinctrl-names = "default";
+			pinctrl-0 = <0x1 0x2>;
+			cs-gpios = <0xffffffff 0x12 0x1>;
+			status = "okay";
+			phandle = <0x3>;
+
+			spidev@0 {
+				compatible = "spidev";
+				reg = <0x0>;
+				#address-cells = <0x1>;
+				#size-cells = <0x0>;
+				spi-max-frequency = <0x7735940>;
+				status = "okay";
+				phandle = <0x4>;
+			};
+		};
+	};
+
+	fragment@2 {
+		target = <0xffffffff>;
+
+		__overlay__ {
+			status = "okay";
+		};
+	};
+
+	__overrides__ {
+		cs0_pin = [00 00 00 02 62 72 63 6d 2c 70 69 6e 73 3a 30 00 00 00 00 03 63 73 2d 67 70 69 6f 73 3a 34 00];
+		cs0_spidev = [00 00 00 04 73 74 61 74 75 73 00];
+	};
+
+	__symbols__ {
+		spi1_pins = "/fragment@0/__overlay__/spi1_pins";
+		spi1_cs_pins = "/fragment@0/__overlay__/spi1_cs_pins";
+		frag1 = "/fragment@1/__overlay__";
+		spidev1_0 = "/fragment@1/__overlay__/spidev@0";
+	};
+
+	__fixups__ {
+		gpio = "/fragment@0:target:0", "/fragment@1/__overlay__:cs-gpios:0";
+		spi1 = "/fragment@1:target:0";
+		aux = "/fragment@2:target:0";
+	};
+
+	__local_fixups__ {
+
+		fragment@1 {
+
+			__overlay__ {
+				pinctrl-0 = <0x0 0x4>;
+			};
+		};
+
+		__overrides__ {
+			cs0_pin = <0x0 0x10>;
+			cs0_spidev = <0x0>;
+		};
+	};
+};

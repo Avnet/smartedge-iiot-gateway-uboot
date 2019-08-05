@@ -1,0 +1,143 @@
+/*
+
+ * Device tree overlay for mcp251x/can0 on spi0.0
+
+ */
+
+#include <dt-bindings/pinctrl/bcm2835.h>
+
+
+/dts-v1/;
+
+/plugin/;
+
+
+
+/ {
+
+    compatible = "brcm,bcm2835", "brcm,bcm2836", "brcm,bcm2708", "brcm,bcm2709";
+
+    /* disable spi-dev for spi2.1 */
+
+    fragment@0 {
+
+        target = <&spi>;
+
+        __overlay__ {
+
+			spi2_pins: spi2_pins40 {
+				     brcm,pins = <40 41 42 43 44 45>;
+				     brcm,function = <BCM2835_FSEL_ALT4>;
+				     };
+			spi2_cs1_pins: spi2_cs1_pins {
+				brcm,pins = <31>;
+				brcm,function = <BCM2835_FSEL_ALT0>; /* output */
+			};
+			spi2_int1_pins: spi2_int1_pins {
+				brcm,pins = <2>;
+                                brcm,pull=<BCM2835_PUD_UP>;
+				brcm,function = <BCM2835_FSEL_ALT0>; /* output */
+		};
+
+        };
+
+    };
+
+
+    /* the interrupt pin of the can-controller */
+
+    fragment@1 {
+
+        target = <&gpio>;
+
+        __overlay__ {
+
+            can0_pins: can0_pins {
+
+                brcm,pins = <2>;
+
+                brcm,function = <0>; /* input */
+
+            };
+
+        };
+
+    };
+
+
+
+    /* the clock/oscillator of the can-controller */
+
+    fragment@3 {
+
+        target-path = "/clocks";
+
+        __overlay__ {
+
+            /* external oscillator of mcp2515 on SPI0.0 */
+
+            can0_osc: can0_osc {
+
+                compatible = "fixed-clock";
+
+                #clock-cells = <0>;
+
+                clock-frequency  = <16000000>;
+
+            };
+
+        };
+
+    };
+
+
+
+    /* the spi config of the can-controller itself binding everything together */
+
+    fragment@4 {
+
+        target = <&spi>;
+
+        __overlay__ {
+
+            /* needed to avoid dtc warning */
+
+            #address-cells = <1>;
+
+            #size-cells = <0>;
+
+            can0: mcp2515@0 {
+
+                reg = <0>;
+
+                compatible = "microchip,mcp2515";
+
+                pinctrl-names = "default";
+
+                pinctrl-0 = <&can0_pins>;
+
+                spi-max-frequency = <10000000>;
+
+                interrupt-parent = <&gpio>;
+
+                interrupts = <2>; /* IRQ_TYPE_LEVEL_LOW */
+
+                clocks = <&can0_osc>;
+
+            };
+
+        };
+
+    };
+
+    __overrides__ {
+
+        oscillator = <&can0_osc>,"clock-frequency:0";
+
+        spimaxfrequency = <&can0>,"spi-max-frequency:0";
+
+        interrupt = <&can0_pins>,"brcm,pins:0",<&can0>,"interrupts:0";
+
+    };
+
+};
