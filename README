@@ -22,7 +22,13 @@ The image is u-boot.bin and should be copied to /boot/kernel7.img
 
 Note:
 
-We do not process cmdline.txt so if you need to change it then edit .config file entry BOOTCOMMAND=
+We do not process cmdline.txt so if you need to change it then edit .config file entry BOOTCOMMAND=.  Note if using RPI SecureBoot then Avnet needs to sign the u-boot code.  This can be used to enable TPM2 IMA Auditing(example. "ima_audit=1"). EVM is not currently implemented, if you want to do this then follow the guide at this link.
+
+https://sourceforge.net/p/linux-ima/wiki/Home/
 
 If you have enabled secure boot feature with the raspberry pi then you must send the resulting image to Avnet so it can be properly signed.
 
+# changes from initial release.
+.config - changed to add fsck.mode=force for variable CONFIG_BOOTCOMMAND
+
+Programmers reference now on all three repositories.  Also, REST API reference is on all three github sites. Programmers reference is SmartEdge-iiot-gateway_programmers_reference.pdf.  The REST API is Smartedge-iiot-gateway-rest-api.pdf
