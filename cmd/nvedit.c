@@ -255,7 +255,7 @@ static int _do_env_set(int flag, int argc, char * const argv[], int env_flag)
 
 	value = malloc(len);
 	if (value == NULL) {
-		printf("## Can't malloc %d bytes\n", len);
+	  //printf("## Can't malloc %d bytes\n", len);
 		return 1;
 	}
 	for (i = 2, s = value; i < argc; ++i) {
