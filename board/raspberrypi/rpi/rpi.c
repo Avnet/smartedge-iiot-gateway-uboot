@@ -289,6 +289,7 @@ static void get_board_rev(void)
 	rev_type = (revision >> 4) & 0xff;
 	models = &rpi_models_new_scheme;
 	models_count = 1;
+	model = &models[0];
 	printf("RPI %s (0x%x)\n", model->name, revision);
 	set_fdt_addr();
 	set_fdtfile();
