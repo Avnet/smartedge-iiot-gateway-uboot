@@ -265,7 +265,6 @@ static void get_board_rev(void)
 {
 	ALLOC_CACHE_ALIGN_BUFFER(struct msg_get_board_rev, msg, 1);
 	int ret;
-	const struct rpi_model *models;
 	uint32_t models_count;
 
 	BCM2835_MBOX_INIT_HDR(msg);
@@ -287,7 +286,7 @@ static void get_board_rev(void)
 	revision = msg->get_board_rev.body.resp.rev;
 	rev_scheme = 1;
 	rev_type = (revision >> 4) & 0xff;
-	models = &rpi_models_new_scheme;
+	model = &rpi_models_new_scheme;
 	models_count = 1;
 	printf("RPI %s (0x%x)\n", model->name, revision);
 	set_fdt_addr();
